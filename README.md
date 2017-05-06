@@ -15,7 +15,7 @@ For details, please see [our project page](http://illustration2vec.net) or
   several pre-trained models from http://illustration2vec.net,
   or execute ``get_models.sh`` in this repository).
 * ``numpy`` and ``scipy``
-* ``PIL`` (Python Imaging Library) or its alternatives (e.g., ``Pillow``) 
+* ``PIL`` (Python Imaging Library) or its alternatives (e.g., ``Pillow``)
 * ``skimage`` (Image processing library for python)
 
 In addition to the above libraries and the pre-trained models, `i2v` requires
@@ -147,6 +147,34 @@ shape: (1, 512), dtype: uint8
   254  28 205 181 118 153 170 155 187  60  90 148 189 218 187 172  95 182
   250 255 147 137 157 225 127 127  42  55 191 114  45 238 228 222  53  94
    42 181  38 254 177 232 150  99]]
+```
+
+# Tips
+(tested only python3.6 and only for chainer users)
+
+If you use this library only for executing, it is convenient for chainer users to make and use a pickle object.
+
+1. make ```models``` directory and download the models there.
+2. make pickle object as follows:
+```
+from chainer.functions.caffe import CaffeFunction
+import pickle
+
+model = CaffeFunction('./models/illust2vec_tag_ver200.caffemodel')
+f = open('./models/illust2vec_tag_ver200.pickle', 'wb')
+pickle.dump(model, f)
+f.close()
+```
+3. use the pickle object as follows:
+```
+import sys
+import i2v
+from PIL import Image
+
+illust2vec = i2v.make_i2v_with_chainer('./models/illust2vec_tag_ver200.pickle', './models/tag_list.json')
+
+img = Image.open('./images/miku.jpg')
+d = illust2vec.estimate_plausible_tags([img], threshold=0.5)
 ```
 
 # License

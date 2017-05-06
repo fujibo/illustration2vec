@@ -68,7 +68,12 @@ def make_i2v_with_chainer(param_path, tag_path=None, threshold_path=None):
     # ignore UserWarnings from chainer
     with warnings.catch_warnings():
         warnings.simplefilter('ignore')
-        net = CaffeFunction(param_path)
+        if '.pickle' in param_path:
+            import pickle
+            net = pickle.load(open(param_path, 'rb'))
+        else:
+            net = CaffeFunction(param_path)
+
 
     kwargs = {}
     if tag_path is not None:
